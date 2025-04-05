@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "479149265486",
+    "project_id": "app-frame-hub",
+    "storage_bucket": "app-frame-hub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479149265486:android:e35f53e1e14ecc49b2a91f",
+        "android_client_info": {
+          "package_name": "com.example.framehub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWORven7u_UC1zKLpcM2N1lysz93m8n4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

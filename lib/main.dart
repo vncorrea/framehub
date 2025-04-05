@@ -1,19 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'viewmodels/auth_viewmodel.dart';
+import 'views/screens/login_screen.dart';
+import 'views/screens/signup_screen.dart';
+import 'package:device_preview/device_preview.dart';
+import 'views/screens/forgot_password_screen.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+  runApp(
+     DevicePreview(
+      enabled: true, // Habilite apenas em debug se preferir
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (_) => AuthViewModel(),
         ),
+        // Adicione outros providers conforme necessário.
+      ],
+     child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        builder: DevicePreview.appBuilder,
+        locale: DevicePreview.locale(context),
+        title: 'FrameHub',
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const LoginScreen(),
+          '/signup': (context) => const SignupScreen(),
+          '/forgot-password': (context) => const ForgotPasswordScreen(),
+        },
       ),
     );
   }
