@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:framehub/views/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 
@@ -36,8 +37,12 @@ class _SignupScreenState extends State<SignupScreen> {
       );
 
       if (success) {
-        // Se o cadastro foi bem-sucedido, navega para a tela principal (ex: FeedScreen)
-        Navigator.pushReplacementNamed(context, '/main');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(user: authViewModel.user!),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

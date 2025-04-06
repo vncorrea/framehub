@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:framehub/views/screens/create_post_screen.dart';
-import 'feed_screen.dart'; 
+import 'feed_screen.dart';
+import 'profile_screen.dart';
 import 'explore_screen.dart';
+import '../../models/user_model.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  final AppUser user;
+
+  const MainScreen({Key? key, required this.user}) : super(key: key);
   
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -12,31 +15,28 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-
-  // Lista de telas correspondentes a cada aba.
-  final List<Widget> _pages = const [
-    FeedScreen(),
-    ExploreScreen(),
-    CreatePostScreen()
-  ];
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
+    // Defina suas páginas. A ProfileScreen recebe o userId como parâmetro.
+    final List<Widget> pages = [
+      FeedScreen(),
+      ExploreScreen(),
+      ProfileScreen(userId: widget.user.id),
+    ];
+    
     return Scaffold(
-      // O IndexedStack mantém o estado de cada página.
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: _onTabTapped,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
