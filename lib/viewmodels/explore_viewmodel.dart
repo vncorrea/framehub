@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../core/services/explore_service.dart';
 import '../models/tag_model.dart';
@@ -24,10 +25,12 @@ class ExploreViewModel extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  StreamSubscription<List<Post>>? _postsSubscription;
+
   ExploreViewModel({ExploreService? exploreService})
       : _exploreService = exploreService ?? ExploreService() {
     _listenToTags();
-    _listenToPosts(); // Inicialmente sem filtro
+    _listenToPosts();
   }
 
   void _listenToTags() {
@@ -43,10 +46,19 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   void _listenToPosts() {
+    // Cancele a assinatura anterior, se houver
+    _postsSubscription?.cancel();
+
+    // Limpe a lista para garantir que, se nenhum post for retornado, ela fique vazia
+    _posts = [];
     _isLoadingPosts = true;
-    _exploreService.getPostsStream(tag: _selectedTag).listen((postsData) {
+    notifyListeners();
+
+    _postsSubscription =
+        _exploreService.getPostsStream(tag: _selectedTag)?.listen((postsData) {
       _posts = postsData;
       _isLoadingPosts = false;
+      print("Posts carregados: ${_posts.length}");
       notifyListeners();
     }, onError: (error) {
       _errorMessage = error.toString();
@@ -55,9 +67,15 @@ class ExploreViewModel extends ChangeNotifier {
     });
   }
 
-  /// Atualiza a tag selecionada e reescuta os posts filtrados
   void updateSelectedTag(String? tag) {
-    _selectedTag = tag;
+    _selectedTag = tag?.toLowerCase(); // Caso você esteja normalizando os valores
+    print("Selected tag updated: $_selectedTag");
     _listenToPosts();
+  }
+
+  @override
+  void dispose() {
+    _postsSubscription?.cancel();
+    super.dispose();
   }
 }

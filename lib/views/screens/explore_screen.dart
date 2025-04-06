@@ -25,6 +25,10 @@ class ExploreScreen extends StatelessWidget {
         label: Text(tag.name),
         selected: isSelected,
         onSelected: (_) => onTap(),
+        selectedColor: Colors.blueAccent.withOpacity(0.3),
+        labelStyle: TextStyle(
+          color: isSelected ? Colors.blue : Colors.black,
+        ),
       ),
     );
   }
@@ -64,11 +68,16 @@ class ExploreScreen extends StatelessWidget {
                                   onSelected: (_) {
                                     viewModel.updateSelectedTag(null);
                                   },
+                                  selectedColor: Colors.blueAccent.withOpacity(0.3),
+                                  labelStyle: TextStyle(
+                                    color: isSelected ? Colors.blue : Colors.black,
+                                  ),
                                 ),
                               );
                             } else {
                               Tag tag = viewModel.tags[index - 1];
-                              bool isSelected = viewModel.selectedTag == tag.name;
+                              bool isSelected = viewModel.selectedTag?.toLowerCase() ==
+                                  tag.name.toLowerCase();
                               return _buildTagChip(tag, isSelected, () {
                                 viewModel.updateSelectedTag(tag.name);
                               });
