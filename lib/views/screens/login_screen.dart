@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
       if (success) {
-        Navigator.pushReplacementNamed(context, '/feed');
+        Navigator.pushReplacementNamed(context, '/main');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

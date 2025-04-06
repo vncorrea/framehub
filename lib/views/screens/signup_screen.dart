@@ -37,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (success) {
         // Se o cadastro foi bem-sucedido, navega para a tela principal (ex: FeedScreen)
-        Navigator.pushReplacementNamed(context, '/feed');
+        Navigator.pushReplacementNamed(context, '/main');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
