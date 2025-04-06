@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:framehub/views/screens/create_post_screen.dart';
-import 'feed_screen.dart';         // Tela de feed
+import 'feed_screen.dart'; 
+import 'explore_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   // Lista de telas correspondentes a cada aba.
   final List<Widget> _pages = const [
     FeedScreen(),
+    ExploreScreen(),
     CreatePostScreen()
   ];
 
