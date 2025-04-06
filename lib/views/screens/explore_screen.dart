@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/explore_viewmodel.dart';
 import '../../models/tag_model.dart';
-import '../../models/post_model.dart';
+import '../../widgets/post_card.dart';
 
 /// Mapa local para converter a string do Firestore em IconData
 final Map<String, IconData> iconMap = {
@@ -10,7 +10,7 @@ final Map<String, IconData> iconMap = {
   "travel": Icons.flight,
   "beach_access": Icons.beach_access,
   "camera_alt": Icons.camera_alt,
-  // Adicione aqui outras opções de ícones, conforme suas tags
+  // Adicione aqui outras opções de ícones conforme suas tags
 };
 
 class ExploreScreen extends StatelessWidget {
@@ -21,42 +21,10 @@ class ExploreScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ChoiceChip(
-        avatar: Icon(iconMap[tag.icon] ?? Icons.help), // ícone baseado no campo "icon"
+        avatar: Icon(iconMap[tag.icon] ?? Icons.help),
         label: Text(tag.name),
         selected: isSelected,
         onSelected: (_) => onTap(),
-      ),
-    );
-  }
-
-  // Exibe cada post em formato de Card
-  Widget _buildPostCard(Post post) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Imagem do post
-          Image.network(
-            post.imageUrl,
-            fit: BoxFit.cover,
-            height: 300,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              post.caption,
-              style: const TextStyle(fontSize: 16.0),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              post.timestamp.toLocal().toString(),
-              style: const TextStyle(fontSize: 12.0, color: Colors.grey),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -83,9 +51,8 @@ class ExploreScreen extends StatelessWidget {
                       ? const Center(child: CircularProgressIndicator())
                       : ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: viewModel.tags.length + 1, // +1 para opção "Todos"
+                          itemCount: viewModel.tags.length + 1, // +1 para a opção "Todos"
                           itemBuilder: (context, index) {
-                            // Opção "Todos"
                             if (index == 0) {
                               bool isSelected = viewModel.selectedTag == null;
                               return Padding(
@@ -110,7 +77,7 @@ class ExploreScreen extends StatelessWidget {
                         ),
                 ),
                 const Divider(),
-                // Seção de Posts
+                // Seção de Posts usando o componente PostCard
                 Expanded(
                   child: viewModel.isLoadingPosts
                       ? const Center(child: CircularProgressIndicator())
@@ -120,7 +87,7 @@ class ExploreScreen extends StatelessWidget {
                               itemCount: viewModel.posts.length,
                               itemBuilder: (context, index) {
                                 final post = viewModel.posts[index];
-                                return _buildPostCard(post);
+                                return PostCard(post: post);
                               },
                             ),
                 ),
