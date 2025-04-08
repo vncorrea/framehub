@@ -51,10 +51,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Exibe um logo (ou imagem representativa)
+                    // Exibe a imagem local do logo (substituindo o FlutterLogo)
                     Container(
                       margin: const EdgeInsets.only(bottom: 32.0),
-                      child: const FlutterLogo(size: 100),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 300,
+                      ),
                     ),
                     // Campo de Email
                     TextFormField(
@@ -95,9 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     authViewModel.isLoading
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
-                          onPressed: () => _onLogin(authViewModel),
-                          child: const Text("Entrar"),
-                        ),
+                            onPressed: () => _onLogin(authViewModel),
+                            child: const Text("Entrar"),
+                          ),
                     const SizedBox(height: 16),
                     // Opções adicionais: Cadastro e Esqueceu a Senha
                     Row(
