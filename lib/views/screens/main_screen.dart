@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     final List<Widget> pages = [
       FeedScreen(),
       ExploreScreen(),
-      CameraScreen(),
+      CameraScreen(userId: widget.user.id),
       ProfileScreen(userId: widget.user.id),
     ];
     
