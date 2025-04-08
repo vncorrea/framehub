@@ -8,8 +8,8 @@ import '../../widgets/post_card.dart';
 final Map<String, IconData> iconMap = {
   "restaurant": Icons.restaurant,
   "travel": Icons.flight,
-  "beach_access": Icons.beach_access,
-  "camera_alt": Icons.camera_alt,
+  "work": Icons.work,
+  "beach": Icons.beach_access,
   // Adicione aqui outras opções de ícones conforme suas tags
 };
 
