@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
+import '../views/screens/post_detail_screen.dart'; // Certifique-se de que o caminho está correto
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -43,57 +44,68 @@ class PostCard extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         final user = snapshot.data!;
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Header: foto de perfil, nome do usuário e timestamp formatado
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: user.profilePictureUrl != null
-                          ? NetworkImage(user.profilePictureUrl!)
-                          : null,
-                      child: user.profilePictureUrl == null
-                          ? const Icon(Icons.person)
-                          : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        user.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => PostDetailScreen(postId: post.id),
+              ),
+            );
+          },
+          child: Card(
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header: foto de perfil, nome do usuário e timestamp formatado
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: user.profilePictureUrl != null
+                            ? NetworkImage(user.profilePictureUrl!)
+                            : null,
+                        child: user.profilePictureUrl == null
+                            ? const Icon(Icons.person)
+                            : null,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      _formatTimestamp(post.timestamp),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
+                      Text(
+                        _formatTimestamp(post.timestamp),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              // Imagem do post
-              Image.network(
-                post.imageUrl,
-                fit: BoxFit.cover,
-                height: 300,
-              ),
-              // Legenda (caption)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  post.caption,
-                  style: const TextStyle(fontSize: 16.0),
+                // Imagem do post
+                Image.network(
+                  post.imageUrl,
+                  fit: BoxFit.cover,
+                  height: 300,
                 ),
-              ),
-            ],
+                // Legenda (caption)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    post.caption,
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
