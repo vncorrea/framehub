@@ -1,16 +1,16 @@
+// profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../models/user_model.dart';
 import '../../models/post_model.dart';
-import '../../widgets/post_card.dart'; // Importa o componente reutilizável
+import '../../widgets/post_card.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String userId;
 
   const ProfileScreen({Key? key, required this.userId}) : super(key: key);
 
-  // Widget para exibir o cabeçalho do perfil
   Widget _buildProfileHeader(AppUser user) {
     return Column(
       children: [
@@ -46,39 +46,43 @@ class ProfileScreen extends StatelessWidget {
         appBar: AppBar(title: const Text("Perfil")),
         body: Consumer<ProfileViewModel>(
           builder: (context, viewModel, _) {
-            if (viewModel.isLoadingProfile) {
+            if (viewModel.isLoadingProfile || viewModel.isLoadingPosts) {
               return const Center(child: CircularProgressIndicator());
             }
+
             if (viewModel.errorProfile != null) {
-              return Center(child: Text("Erro: ${viewModel.errorProfile}"));
+              return Center(child: Text("Erro no perfil: ${viewModel.errorProfile}"));
             }
+
             AppUser user = viewModel.userProfile!;
+
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildProfileHeader(user),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: const Text(
-                      "Posts",
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Meus Posts",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  viewModel.isLoadingPosts
-                      ? const Center(child: CircularProgressIndicator())
-                      : viewModel.userPosts.isEmpty
-                          ? const Center(child: Text("Nenhum post."))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: viewModel.userPosts.length,
-                              itemBuilder: (context, index) {
-                                Post post = viewModel.userPosts[index];
-                                return PostCard(post: post);
-                              },
-                            ),
+                  viewModel.userPosts.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Text("Nenhum post ainda."),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: viewModel.userPosts.length,
+                          itemBuilder: (context, index) {
+                            Post post = viewModel.userPosts[index];
+                            return PostCard(post: post);
+                          },
+                        ),
                 ],
               ),
             );
