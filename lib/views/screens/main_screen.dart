@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'feed_screen.dart';
 import 'profile_screen.dart';
+import 'camera_screen.dart';
 import 'explore_screen.dart';
 import '../../models/user_model.dart';
 
@@ -22,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     final List<Widget> pages = [
       FeedScreen(),
       ExploreScreen(),
+      CameraScreen(),
       ProfileScreen(userId: widget.user.id),
     ];
     
