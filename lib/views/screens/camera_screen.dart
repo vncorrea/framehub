@@ -1,15 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore
-import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
+  final String userId;
+
+  const CameraScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -36,7 +36,7 @@ class _CameraScreenState extends State<CameraScreen> {
       _cameraController = CameraController(camera, ResolutionPreset.medium);
       _initializeControllerFuture = _cameraController!.initialize();
 
-      setState(() {});
+      setState(() {}); // Atualiza a UI após a inicialização
     } catch (e) {
       debugPrint('Erro ao inicializar câmera: $e');
     }
@@ -54,46 +54,50 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-Future<void> _uploadToFirebase() async {
-  if (_capturedImage == null) return;
+  Future<void> _uploadToFirebase() async {
+    if (_capturedImage == null) return;
 
-  setState(() => _isUploading = true);
+    setState(() => _isUploading = true);
 
-  try {
-    final file = File(_capturedImage!.path);
-    final fileName = const Uuid().v4();
-    final ref = FirebaseStorage.instance.ref().child('fotos/$fileName.jpg');
+    try {
+      final file = File(_capturedImage!.path);
+      final fileName = const Uuid().v4();
+      // Armazena a imagem no Firebase Storage
+      final ref = FirebaseStorage.instance.ref().child('posts/$fileName.jpg');
+      await ref.putFile(file);
+      final downloadUrl = await ref.getDownloadURL();
 
-    await ref.putFile(file);
-    final downloadUrl = await ref.getDownloadURL();
+      // Adiciona o post na coleção "posts" do Firestore, incluindo o userId
+      await FirebaseFirestore.instance.collection('posts').add({
+        'userId': widget.userId,
+        'imageUrl': downloadUrl,
+        'caption': _textController.text.trim(),
+        'timestamp': FieldValue.serverTimestamp(),
+        // Se você usar tags, pode incluir algo como:
+        // 'tags': [/* lista de tags */],
+      });
 
-    await FirebaseFirestore.instance.collection('fotos').add({
-      'image_url': downloadUrl,
-      'description': _textController.text.trim(),
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+      Fluttertoast.showToast(
+        msg: "Foto enviada com sucesso!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
 
-    Fluttertoast.showToast(
-      msg: "Foto enviada com sucesso!",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-    );
+      setState(() {
+        _capturedImage = null;
+        _textController.clear();
+      });
+    } catch (e) {
+      debugPrint("Erro ao enviar: $e");
 
-    setState(() {
-      _capturedImage = null;
-      _textController.clear();
-    });
-  } catch (e) {
-    debugPrint("Erro ao enviar: $e");
-
-    Fluttertoast.showToast(
-      msg: "Erro ao enviar imagem",
-      backgroundColor: Colors.red,
-    );
-  } finally {
-    setState(() => _isUploading = false);
+      Fluttertoast.showToast(
+        msg: "Erro ao enviar imagem",
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      setState(() => _isUploading = false);
+    }
   }
-}
 
   @override
   void dispose() {
