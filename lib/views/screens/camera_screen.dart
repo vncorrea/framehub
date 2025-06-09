@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../models/tag_model.dart';
 
 final Map<String, IconData> iconMap = {
@@ -31,6 +32,7 @@ class _CameraScreenState extends State<CameraScreen> {
   final TextEditingController _textController = TextEditingController();
   List<Tag> _tags = [];
   List<String> _selectedTags = [];
+  String? _uploadedImageUrl;
 
   @override
   void initState() {
@@ -66,7 +68,18 @@ class _CameraScreenState extends State<CameraScreen> {
       final image = await _cameraController!.takePicture();
       setState(() {
         _capturedImage = image;
+        _uploadedImageUrl = null;
       });
+      if (kIsWeb) {
+        // No web, faça upload imediatamente e pegue a URL
+        final fileName = const Uuid().v4();
+        final ref = FirebaseStorage.instance.ref().child('posts/$fileName.jpg');
+        await ref.putData(await image.readAsBytes());
+        final downloadUrl = await ref.getDownloadURL();
+        setState(() {
+          _uploadedImageUrl = downloadUrl;
+        });
+      }
     } catch (e) {
       debugPrint('Erro ao tirar foto: $e');
     }
@@ -100,6 +113,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       setState(() {
         _capturedImage = null;
+        _uploadedImageUrl = null;
         _textController.clear();
         _selectedTags.clear();
       });
@@ -191,7 +205,12 @@ class _CameraScreenState extends State<CameraScreen> {
                 )
               : Column(
                   children: [
-                    Expanded(child: Image.file(File(_capturedImage!.path))),
+                    if (kIsWeb)
+                      _uploadedImageUrl != null
+                          ? Expanded(child: Image.network(_uploadedImageUrl!))
+                          : const Expanded(child: Center(child: CircularProgressIndicator()))
+                    else
+                      Expanded(child: Image.file(File(_capturedImage!.path))),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
@@ -216,6 +235,7 @@ class _CameraScreenState extends State<CameraScreen> {
                             onPressed: () {
                               setState(() {
                                 _capturedImage = null;
+                                _uploadedImageUrl = null;
                                 _textController.clear();
                                 _selectedTags.clear();
                               });

@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'viewmodels/auth_viewmodel.dart';
+import 'viewmodels/about_viewmodel.dart';
 import 'views/screens/login_screen.dart';
 import 'views/screens/signup_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'views/screens/forgot_password_screen.dart';
 import 'views/screens/main_screen.dart';
+import 'views/about_view.dart';
 import 'models/user_model.dart';
 
 void main() async {
@@ -33,7 +35,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthViewModel>(
           create: (_) => AuthViewModel(),
         ),
-        // Adicione outros providers conforme necessário.
+        ChangeNotifierProvider<AboutViewModel>(
+          create: (_) => AboutViewModel(),
+        ),
       ],
      child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,6 +53,7 @@ class MyApp extends StatelessWidget {
               final user = ModalRoute.of(context)!.settings.arguments as AppUser;
               return MainScreen(user: user);
           },
+          '/about': (context) => const AboutView(),
         },
       ),
     );

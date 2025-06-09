@@ -40,7 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(
+        title: const Text("Login"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+              Navigator.pushNamed(context, '/about');
+            },
+          ),
+        ],
+      ),
       body: ChangeNotifierProvider(
         create: (_) => AuthViewModel(),
         child: Consumer<AuthViewModel>(
