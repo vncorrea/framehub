@@ -11,7 +11,12 @@ class ExploreViewModel extends ChangeNotifier {
   List<Tag> get tags => _tags;
 
   List<Post> _posts = [];
-  List<Post> get posts => _posts;
+  List<Post> get posts {
+    if (_searchQuery.isEmpty) return _posts;
+    return _posts.where((post) =>
+      post.caption.toLowerCase().contains(_searchQuery)
+    ).toList();
+  }
 
   String? _selectedTag;
   String? get selectedTag => _selectedTag;
@@ -24,6 +29,9 @@ class ExploreViewModel extends ChangeNotifier {
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  String _searchQuery = '';
+  String get searchQuery => _searchQuery;
 
   StreamSubscription<List<Post>>? _postsSubscription;
 
@@ -71,6 +79,11 @@ class ExploreViewModel extends ChangeNotifier {
     _selectedTag = tag?.toLowerCase(); // Caso você esteja normalizando os valores
     print("Selected tag updated: $_selectedTag");
     _listenToPosts();
+  }
+
+  void updateSearchQuery(String query) {
+    _searchQuery = query.toLowerCase();
+    notifyListeners();
   }
 
   @override
