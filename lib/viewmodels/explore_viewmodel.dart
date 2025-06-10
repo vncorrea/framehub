@@ -76,7 +76,7 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   void updateSelectedTag(String? tag) {
-    _selectedTag = tag?.toLowerCase(); // Caso você esteja normalizando os valores
+    _selectedTag = tag;
     print("Selected tag updated: $_selectedTag");
     _listenToPosts();
   }
