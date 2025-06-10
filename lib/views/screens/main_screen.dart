@@ -16,7 +16,17 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  
+  Key _profileKey = UniqueKey();
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+      if (index == 3) {
+        _profileKey = UniqueKey();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Defina suas páginas. A ProfileScreen recebe o userId como parâmetro.
@@ -24,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
       FeedScreen(),
       ExploreScreen(),
       CameraScreen(userId: widget.user.id),
-      ProfileScreen(userId: widget.user.id),
+      ProfileScreen(key: _profileKey, userId: widget.user.id),
     ];
     
     return Scaffold(
@@ -34,11 +44,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onTabTapped,
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(

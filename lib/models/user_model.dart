@@ -5,7 +5,7 @@ class AppUser {
   final String phone;
   final String? username;
   final String? profilePictureUrl;
-  final String? username;
+
 
   const AppUser({
     required this.id,
@@ -14,7 +14,7 @@ class AppUser {
     required this.phone,
     required this.username,
     this.profilePictureUrl,
-    this.username,
+
   });
 
   /// Cria uma instância de [AppUser] a partir de um Map (normalmente do Firestore)
@@ -26,7 +26,7 @@ class AppUser {
       phone: data['phone'] ?? '',
       username: data['username'] ?? '',
       profilePictureUrl: data['profilePictureUrl'],
-      username: data['username'],
+
     );
   }
 

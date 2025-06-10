@@ -31,6 +31,7 @@ class PostCard extends StatelessWidget {
         email: "",
         phone: "",
         profilePictureUrl: null,
+        username: "desconhecido",
       );
     }
   }
