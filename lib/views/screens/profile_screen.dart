@@ -28,6 +28,10 @@ class ProfileScreen extends StatelessWidget {
           user.name,
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        Text(
+          '@${user.username}',
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
+        ),
         const SizedBox(height: 4),
         Text(
           user.phone,

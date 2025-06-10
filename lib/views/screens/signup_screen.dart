@@ -18,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   Future<void> _onRegister(AuthViewModel authViewModel) async {
     if (_formKey.currentState!.validate()) {
@@ -29,11 +30,14 @@ class _SignupScreenState extends State<SignupScreen> {
         return;
       }
 
+      // Adicione aqui a validação se necessário
+
       bool success = await authViewModel.register(
         _nameController.text.trim(),
         _emailController.text.trim(),
         _phoneController.text.trim(),
         _passwordController.text.trim(),
+        _usernameController.text.trim(),
       );
 
       if (success) {
@@ -60,6 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _usernameController.dispose();
     super.dispose();
   }
 
@@ -75,6 +80,20 @@ class _SignupScreenState extends State<SignupScreen> {
               key: _formKey,
               child: ListView(
                 children: [
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: "Usuário",
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Por favor, insira seu nome de usuário";
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _nameController,

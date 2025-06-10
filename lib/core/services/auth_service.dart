@@ -16,6 +16,7 @@ class AuthService {
     required String email,
     required String phone,
     required String password,
+    required String username,
   }) async {
     try {
       // Cria usuário no Firebase Authentication.
@@ -30,6 +31,7 @@ class AuthService {
         name: name,
         email: email,
         phone: phone,
+        username: username,
         profilePictureUrl: null,
       );
 

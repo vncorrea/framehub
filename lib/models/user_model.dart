@@ -3,6 +3,7 @@ class AppUser {
   final String name;
   final String email;
   final String phone;
+  final String? username;
   final String? profilePictureUrl;
 
   const AppUser({
@@ -10,6 +11,7 @@ class AppUser {
     required this.name,
     required this.email,
     required this.phone,
+    required this.username,
     this.profilePictureUrl,
   });
 
@@ -20,6 +22,7 @@ class AppUser {
       name: data['name'] ?? '',
       email: data['email'] ?? '',
       phone: data['phone'] ?? '',
+      username: data['username'] ?? '',
       profilePictureUrl: data['profilePictureUrl'],
     );
   }

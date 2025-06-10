@@ -51,6 +51,7 @@ class AuthViewModel extends ChangeNotifier {
     String email,
     String phone,
     String password,
+    String username
   ) async {
     _setLoading(true);
     try {
@@ -59,6 +60,7 @@ class AuthViewModel extends ChangeNotifier {
         email: email,
         phone: phone,
         password: password,
+        username: username
       );
       if (newUser != null) {
         _user = newUser;
